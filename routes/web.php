@@ -16,5 +16,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', 'CategoryController@index');
 
 Route::get('/list/{id}','CategoryController@show');
+Route::get('/back/{id}','CategoryController@back');
+Route::get('/add/{id}/{name}','CategoryController@create');
+Route::get('/addSub/{id}/{name}','CategoryController@newSubCategory');
 
 Route::get('/done','CategoryController@showCategoryPage');

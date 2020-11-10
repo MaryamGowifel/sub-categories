@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
 class CategoryController extends Controller
 {
     /**
@@ -14,9 +13,6 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        // $catNum=$_GET['category'];
-        // $subcat = DB::table('category')->where('parent_id','=',$catNum)->get();
-        // return view('success', ['subcat' => $subcat]);
         $categories = DB::table('category')->where('parent_id','=', 0)->get();
         return view('welcome', ['categories' => $categories]);
        
@@ -28,17 +24,16 @@ class CategoryController extends Controller
     }
 
     public function showCategoryPage(){
-        $catNum=$_GET['category'];
-        $category = DB::table('category')->where('id','=', $catNum)->get('category_name');
+        // $catNum=$_GET['category'];
+        // $category = DB::table('category')->where('id','=', $catNum)->get('category_name');
         return view('done', ['category' => $category]);
     }
 
-
-
-    
     public function back($id){
-    echo json_encode(DB::table('category')->where('id', $id)->get('parent_id'));
-       
+       $parent= DB::table('category')->where('id', $id)->get('parent_id')->pluck('parent_id');
+       $gparent= DB::table('category')->where('parent_id',$parent)
+                     ->get();
+                    return $gparent;
     }
     
     /**
@@ -46,9 +41,26 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id,$name)
     {
-        //
+         //validation
+        //  $this->validate($name,[
+        //     'category_name'=>'required'
+        // ]);
+            $arr=[$id,$name];
+            $insert= DB::table('category')->insert([
+            'category_name'=>$name,
+            'parent_id'=>$id
+        ]);
+        return $arr;
+    }
+    public function newSubCategory($id,$name){
+        $arr=[$id,$name];
+        $insert= DB::table('category')->insert([
+        'category_name'=>$name,
+        'parent_id'=>$id
+        ]);
+        return $arr;
     }
 
     /**
